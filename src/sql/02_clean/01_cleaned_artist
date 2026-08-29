@@ -1,0 +1,5 @@
+CREATE OR REPLACE TABLE d5_clean.cleaned_artist AS
+SELECT
+    CAST(ArtistID AS INT) AS ArtistID,
+    TRIM(Name) AS Name
+FROM d5_raw.raw_artist;
