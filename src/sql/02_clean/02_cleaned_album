@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS workspace.d5_clean.cleaned_album;
