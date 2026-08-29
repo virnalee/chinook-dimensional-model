@@ -1,0 +1,30 @@
+%sql
+-- Clean and standardize Invoice
+
+-- ==================================================
+-- Issues found in 6.1.2 Invoice profiling, fixed below:
+-- a. BillingCity: "Edinburgh " had a trailing space -> TRIM(BillingCity) fixes it
+-- b. BillingCity: "Sidney" was a typo for "Sydney" -> CASE corrects it
+-- c. BillingState: "Dublin" was a city, not a valid state -> set to NULL
+-- Also: type-casting enforced on all fields, TRIM applied to text fields
+-- No other changes: BillingState (other), BillingPostalCode nulls kept as-is (expected/optional)
+-- ==================================================
+
+CREATE OR REPLACE TABLE d5_clean.cleaned_invoice AS
+SELECT
+CAST(InvoiceId AS INT) AS InvoiceId,
+CAST(CustomerId AS INT) AS CustomerId,
+CAST(InvoiceDate AS TIMESTAMP) AS InvoiceDate,
+TRIM(BillingAddress) AS BillingAddress,
+CASE
+WHEN TRIM(BillingCity) = 'Sidney' THEN 'Sydney' -- fix: typo correction
+ELSE TRIM(BillingCity) -- fix: remove trailing/leading whitespace
+END AS BillingCity,
+CASE
+WHEN TRIM(BillingState) = 'Dublin' THEN NULL -- fix: invalid city-as-state value
+ELSE TRIM(BillingState)
+END AS BillingState,
+TRIM(BillingCountry) AS BillingCountry,
+TRIM(BillingPostalCode) AS BillingPostalCode,
+CAST(Total AS DECIMAL(10,2)) AS Total
+FROM d5_raw.raw_invoice;
