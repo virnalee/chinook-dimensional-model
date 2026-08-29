@@ -1,0 +1,9 @@
+-- Clean and standardize InvoiceLine
+CREATE OR REPLACE TABLE d5_clean.cleaned_invoice_line AS
+SELECT
+    CAST(InvoiceLineId AS INT) AS InvoiceLineId,
+    CAST(InvoiceId AS INT) AS InvoiceId,
+    CAST(TrackId AS INT) AS TrackId,
+    CAST(UnitPrice AS DECIMAL(10,2)) AS UnitPrice,
+    CAST(Quantity AS INT) AS Quantity
+FROM d5_raw.raw_invoiceline;
