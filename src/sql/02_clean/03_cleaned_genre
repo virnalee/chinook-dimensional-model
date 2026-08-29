@@ -1,0 +1,4 @@
+CREATE OR REPLACE TABLE workspace.d5_clean.cleaned_genre AS
+SELECT DISTINCT CAST(GenreId AS INT) AS GenreId, Name AS GenreName
+FROM workspace.d5_raw.raw_genre
+WHERE GenreId IS NOT NULL;
